@@ -179,15 +179,25 @@ client.on('interactionCreate', async interaction => {
 
       interaction.showModal(first_modal);
     } else if (interaction.customId.startsWith("ok")) {
-      try {
-        const index = interaction.customId.indexOf("_");
-        const ok_msg = await client.users.cache.get(interaction.customId.substring(index + 1)).send(`# 合否通知\n\n## ||採用||\nあなたは厳正な審査の上、Minachan鯖のメンバーとして正式に採用されました！\n以下のリンクよりDiscordサーバーに加入してください。\n[Minachan鯖 Discordサーバー](https://discord.gg/PstjZXMkfy)`);
-        disabled_button(interaction.message, true);
-        interaction.reply({ content: "採用メッセージを送信しました。", ephemeral: true });
-      } catch (error) {
-        console.error('メッセージの送信中にエラーが発生しました:\n', error);
-        interaction.reply({ content: "メッセージの送信中にエラーが発生しました。", ephemeral: true });
-      }
+
+      const index = interaction.customId.indexOf("_");
+
+      const ok_check = new ModalBuilder()
+        .setTitle("二重確認")
+        .setCustomId(`okform_${interaction.customId.substring(index + 1)}`);
+      const ok_content = new TextInputBuilder()
+        .setLabel("「採用」と入力してください。")
+        .setCustomId("ok_content")
+        .setStyle("Short")
+        .setMaxLength(2)
+        .setMinLength(2)
+        .setRequired(true);
+
+      const ok_content_action = new ActionRowBuilder().setComponents(ok_content);
+
+      ok_check.setComponents(ok_content_action);
+
+      interaction.showModal(ok_check);
     } else if (interaction.customId.startsWith("ng")) {
 
       const index = interaction.customId.indexOf("_");
@@ -470,6 +480,21 @@ client.on('interactionCreate', async interaction => {
       } catch (error) {
         console.error('メッセージの送信中にエラーが発生しました:\n', error);
         interaction.reply({ content: "メッセージの送信中にエラーが発生しました。", ephemeral: true });
+      }
+    } else if (interaction.customId.startsWith("okform")) {
+      const ok_content = interaction.fields.getTextInputValue("ok_content");
+      if (ok_content === "採用") {
+        try {
+          const index = interaction.customId.indexOf("_");
+          const ok_msg = await client.users.cache.get(interaction.customId.substring(index + 1)).send(`# 合否通知\n\n## ||採用||\nあなたは厳正な審査の上、Minachan鯖のメンバーとして正式に採用されました！\n以下のリンクよりDiscordサーバーに加入してください。\n[Minachan鯖 Discordサーバー](https://discord.gg/PstjZXMkfy)`);
+          disabled_button(interaction.message, true);
+          interaction.reply({ content: "採用メッセージを送信しました。", ephemeral: true });
+        } catch (error) {
+          console.error('メッセージの送信中にエラーが発生しました:\n', error);
+          interaction.reply({ content: "メッセージの送信中にエラーが発生しました。", ephemeral: true });
+        }
+      } else {
+        interaction.reply({ content: "二重確認に失敗しました。", ephemeral: true });
       }
     }
   } else if (interaction.isStringSelectMenu()) {
