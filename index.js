@@ -486,7 +486,7 @@ client.on('interactionCreate', async interaction => {
       if (ok_content === "採用") {
         try {
           const index = interaction.customId.indexOf("_");
-          const ok_msg = await client.users.cache.get(interaction.customId.substring(index + 1)).send(`# 合否通知\n\n## ||採用||\nあなたは厳正な審査の上、Minachan鯖のメンバーとして正式に採用されました！\n以下のリンクよりDiscordサーバーに加入してください。\n[Minachan鯖 Discordサーバー](https://discord.gg/PstjZXMkfy)`);
+          const ok_msg = await client.users.cache.get(interaction.customId.substring(index + 1)).send(`# 選考結果のお知らせ\nこのたびは、Minachan鯖 メンバー募集にご応募いただきありがとうございました。\n\n慎重に選考を行った結果、貴殿の採用が決定いたしましたのでご通知申し上げます。\nつきましては、以下のリンクよりMinachan鯖 Discordサーバーにご参加ください。\n[Minachan鯖 Discordサーバー](https://discord.gg/PstjZXMkfy)`);
           disabled_button(interaction.message, true);
           interaction.reply({ content: "採用メッセージを送信しました。", ephemeral: true });
         } catch (error) {
