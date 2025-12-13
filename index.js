@@ -447,7 +447,7 @@ client.on('interactionCreate', async interaction => {
       const reason = interaction.fields.getTextInputValue("ng_reason");
       try {
         const index = interaction.customId.indexOf("_");
-        const ng_msg = await client.users.cache.get(interaction.customId.substring(index + 1)).send(`# 合否通知\n\n## ||不採用||\nあなたは厳正な審査の上、残念ながら不採用となりました。理由は以下の通りです。\n` + '```' + reason + '```');
+        const ng_msg = await client.users.cache.get(interaction.customId.substring(index + 1)).send(`# 選考結果のお知らせ\nこのたびは、Minachan鯖メンバー募集にご応募いただきありがとうございました。\n\n慎重に選考を行った結果、まことに残念ながら今回についてはご期待に添えない結果となりました。\nなにとぞご容赦いただければ幸甚に存じます。\nなお、ご期待に添えない結果となった理由は以下に記してある通りとなります。\n` + '```' + reason + '```');
         disabled_button(interaction.message, false);
         interaction.reply({ content: "不採用メッセージを送信しました。", ephemeral: true });
       } catch (error) {
